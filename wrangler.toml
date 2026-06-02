@@ -1,3 +1,0 @@
-name = "bep-ai"
-compatibility_date = "2024-01-01"
-main = ".svelte-kit/output/client/_worker.js"
