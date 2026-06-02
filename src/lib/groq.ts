@@ -125,6 +125,21 @@ YÊU CẦU TRẢ VỀ JSON CHÍNH XÁC (không giải thích, chỉ JSON thuần
   ]
 }
 
+QUY TẮC QUAN TRỌNG VỀ SỰ ĐA DẠNG:
+- TÊN MÓN KHÔNG ĐƯỢC TRÙNG nhau (mỗi món phải khác tên)
+- LOẠI MÓN (type) KHÔNG ĐƯỢC TRÙNG nhau nếu có thể
+  * Nếu budget là "famine": ưu tiên 1 main + 1 side KHÁC loại
+  * Nếu budget là "normal": bắt buộc có main + side hoặc main + soup, KHÔNG trùng type
+  * Nếu budget là "luxury": bắt buộc có main + side + soup, mỗi cái 1 loại duy nhất
+- NÊN chọn món tỪ DANH SÁCH ĐA DẠNG phía dưới, KHÔNG lặp lại món đã chọn gần đây
+- HƯƠNG VỊ phải khác nhau: nếu có món chiên thì món kia nên là món hấp/luộc/xào
+
+DANH SÁCH MÓN ĐA DẠNG (ưu tiên chọn từ đây, mỗi lần gợi ý hãy chọn kết hợp KHÁC LƯỠI với lần trước):
+- Main: Thịt kho trứng, Gà xào sả ớt, Cá chiên giòn, Bò lúc lắc, Tôm rang thịt, Thịt rang muối, Cá hồi áp chảo, Bò xào măng, Gà rang gừng, Thịt heo chiên giòn, Cá bass chiên xù, Bò nướng lá lốt
+- Side: Rau muống xào tỏi, Rau củ xào, Đậu que xào, Cải thìa xào, Rau lang xào, Nộm đu đủ, Gỏi ngó sen, Xà lách trộn, Rau luộc chấm nước mắm
+- Soup: Canh rau củ, Canh chua cá, Canh gà nấu nấm, Súp gà ngô, Canh rau mồng tơi, Canh bí đao, Canh khổ qua dồn thịt
+- Dessert: Chè đậu đỏ, Chè bắp, Trái cây dĩa, Sữa chua hoa quả, Thạch rau câu
+
 QUY TẮC:
 - Trả về đúng JSON, không có markdown code block, không có text khác
 - Mỗi món ăn phải có đủ: name, name_vi, type, ingredients, prep_work, instructions, tips
@@ -138,7 +153,8 @@ QUY TẮC:
 - Số bước: tối thiểu 5-10 bước cho mỗi món
 - tips: ít nhất 3 mẹo hữu ích cho món ăn
 - Đảm bảo món ăn phù hợp với ${people} người
-- Luôn ưu tiên món ăn Việt Nam`;
+- Luôn ưu tiên món ăn Việt Nam
+- HÃY SÁNG TẠO, chọn món KHÔNG theo công thức cứng nhắc`;
 
 	const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
