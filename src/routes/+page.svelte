@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { generateCombo, type AIGeneratedCombo, type AIGeneratedDish, type LocationType, type BudgetLevel, type RecipeStep } from '$lib/groq';
+	import { generateCombo, type AIGeneratedCombo, type BudgetLevel, type RecipeStep } from '$lib/groq';
 
 	// State
-	let selectedLocation = $state<LocationType>('vietnam');
 	let selectedBudget = $state<BudgetLevel>('normal');
 	let selectedPeople = $state(2);
 	let currentCombo = $state<AIGeneratedCombo | null>(null);
@@ -11,12 +10,6 @@
 	let checkedItems = $state<Set<string>>(new Set());
 	let showRecipe = $state<Set<number>>(new Set());
 	let errorMessage = $state<string | null>(null);
-
-	// Location options
-	const locationOptions = [
-		{ value: 'vietnam' as LocationType, label: 'Việt Nam', flag: 'VN' },
-		{ value: 'europe' as LocationType, label: 'Châu Âu', flag: 'EU' }
-	];
 
 	// Budget options
 	const budgetOptions = [
@@ -38,7 +31,6 @@
 
 		try {
 			currentCombo = await generateCombo({
-				location: selectedLocation,
 				budget: selectedBudget,
 				people: selectedPeople
 			});
@@ -179,38 +171,6 @@
 	<main class="px-4 max-w-6xl mx-auto relative z-10">
 		<!-- Form Section -->
 		<div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 mb-8">
-			<!-- Location Selector -->
-			<div class="mb-6">
-				<label class="block text-sm font-bold text-gray-600 mb-3 flex items-center gap-2">
-					<svg class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-						<circle cx="12" cy="10" r="3"/>
-					</svg>
-					Bạn ở đâu?
-				</label>
-				<div class="flex gap-3 justify-center">
-					{#each locationOptions as option}
-						<button
-							onclick={() => selectedLocation = option.value}
-							class="relative px-6 py-4 rounded-2xl font-bold transition-all duration-300 border-2 shadow-md
-							{selectedLocation === option.value
-								? 'bg-gradient-to-br from-orange-400 to-red-500 text-white border-orange-500 scale-105 shadow-xl'
-								: 'bg-gray-50 text-gray-700 border-gray-200 hover:border-orange-300 hover:scale-102'}"
-						>
-							{#if selectedLocation === option.value}
-								<span class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-									<svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-										<path d="M5 12l5 5L20 7"/>
-									</svg>
-								</span>
-							{/if}
-							<span class="block text-2xl mb-1">{option.flag}</span>
-							<span class="block text-sm">{option.label}</span>
-						</button>
-					{/each}
-				</div>
-			</div>
-
 			<!-- People Selector -->
 			<div class="mb-6">
 				<label class="block text-sm font-bold text-gray-600 mb-3 flex items-center gap-2">
