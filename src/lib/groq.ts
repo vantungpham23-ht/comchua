@@ -2,6 +2,16 @@ export interface Ingredient {
 	name: string;
 	quantity: string;
 	unit: string;
+	alternative?: string;
+	notes?: string;
+}
+
+export interface RecipeStep {
+	step: number;
+	action: string;
+	explanation?: string;
+	tips?: string;
+	notes?: string;
 }
 
 export interface AIGeneratedDish {
@@ -10,7 +20,9 @@ export interface AIGeneratedDish {
 	type: 'main' | 'side' | 'soup' | 'dessert' | 'extra';
 	ingredients: Ingredient[];
 	prep_work: string[];
-	instructions: string[];
+	instructions: RecipeStep[];
+	tips: string[];
+	variations?: string[];
 	notes?: string;
 }
 
@@ -110,27 +122,38 @@ YÊU CẦU TRẢ VỀ JSON CHÍNH XÁC (không giải thích, chỉ JSON thuần
   "meal_type": "bữa sáng/bữa trưa/bữa tối/bữa xế",
   "summary": "1 câu mô tả ngắn tổng quan bữa ăn (dưới 50 chữ)",
   "why_recommend": "1 câu giải thích tại sao nên ăn món này (dưới 50 chữ)",
-  "tips": ["mẹo 1", "mẹo 2", "mẹo 3"],
+  "tips": ["mẹo tổng quát 1", "mẹo tổng quát 2", "mẹo tổng quát 3"],
   "dishes": [
     {
       "name": "tên tiếng Anh",
       "name_vi": "tên tiếng Việt",
       "type": "main/side/soup/dessert/extra",
       "ingredients": [
-        { "name": "tên nguyên liệu", "quantity": "số lượng", "unit": "đơn vị" }
+        { "name": "tên nguyên liệu", "quantity": "số lượng", "unit": "đơn vị", "alternative": "thay thế nếu không có", "notes": "ghi chú thêm" }
       ],
       "prep_work": ["bước chuẩn bị 1", "bước chuẩn bị 2"],
-      "instructions": ["bước 1", "bước 2", "bước 3"],
-      "notes": "mẹo nấu (nếu có)"
+      "instructions": [
+        { "step": 1, "action": "hành động cụ thể cần làm", "explanation": "tại sao phải làm vậy (để món ngon hơn/tránh lỗi)", "tips": "mẹo cho bước này", "notes": "lưu ý quan trọng nếu có" }
+      ],
+      "tips": ["mẹo riêng cho món này 1", "mẹo riêng cho món này 2"],
+      "variations": ["biến thể 1", "biến thể 2"],
+      "notes": "ghi chú tổng quát về món ăn"
     }
   ]
 }
 
 QUY TẮC:
 - Trả về đúng JSON, không có markdown code block, không có text khác
-- Mỗi món ăn phải có đủ: name, name_vi, type, ingredients, prep_work, instructions
-- ingredients: 3-6 nguyên liệu chính, ghi số lượng và đơn vị thực tế
-- instructions: 3-8 bước ngắn gọn, mỗi bước dưới 30 chữ
+- Mỗi món ăn phải có đủ: name, name_vi, type, ingredients, prep_work, instructions, tips
+- ingredients: LIỆT KÊ TẤT CẢ nguyên liệu cần thiết (tối thiểu 5-10 nguyên liệu), ghi rõ số lượng, đơn vị, và alternative nếu có
+- instructions: MỖI BƯỚC phải có:
+  * step: số thứ tự bước
+  * action: mô tả hành động cụ thể và chi tiết (không dưới 50 chữ cho mỗi bước)
+  * explanation: GIẢI THÍCH TẠI SAO làm vậy (để món ngon hơn/chống lỗi thường gặp)
+  * tips: mẹo nhỏ cho bước này
+  * notes: lưu ý quan trọng (có thể để trống)
+- Số bước: tối thiểu 5-10 bước cho mỗi món
+- tips: ít nhất 3 mẹo hữu ích cho món ăn
 - Đảm bảo món ăn phù hợp với ${people} người
 - Nếu phong cách là Việt Nam: ưu tiên món Việt
 - Nếu phong cách là châu Âu: ưu tiên món Âu`;
@@ -161,7 +184,7 @@ QUY TẮC:
 				}
 			],
 			temperature: 0.8,
-			max_tokens: 4096
+			max_tokens: 8192
 		})
 	});
 
