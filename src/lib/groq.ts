@@ -34,27 +34,12 @@ export interface AIGeneratedCombo {
 	meal_type: string;
 }
 
-export type LocationType = 'vietnam' | 'europe';
 export type BudgetLevel = 'famine' | 'normal' | 'luxury';
 
 interface GenerateParams {
-	location: LocationType;
 	budget: BudgetLevel;
 	people: number;
 }
-
-const LOCATION_CONFIG = {
-	vietnam: {
-		stores: 'Bách Hoá Xanh, Winmart, Co.opmart, Lotte Mart, hoặc chợ',
-		currency: 'VND',
-		style: 'Ẩm thực Việt Nam truyền thống với hương vị cân bằng, nhiều rau xanh, nước mắm, herb tươi'
-	},
-	europe: {
-		stores: 'Billa, Lidl, Kaufland, Tesco, Aldi',
-		currency: 'EUR',
-		style: 'Ẩm thực châu Âu với nguyên liệu tươi, phomai, rau củ nướng'
-	}
-};
 
 const BUDGET_CONFIG = {
 	famine: {
@@ -102,17 +87,15 @@ function getDishesCount(people: number, budget: string): { min: number; max: num
 }
 
 export async function generateCombo(params: GenerateParams): Promise<AIGeneratedCombo> {
-	const { location, budget, people } = params;
+	const { budget, people } = params;
 
 	const budgetInfo = BUDGET_CONFIG[budget as keyof typeof BUDGET_CONFIG];
-	const locationInfo = LOCATION_CONFIG[location as keyof typeof LOCATION_CONFIG];
 	const dishesRange = getDishesCount(people, budget);
 
 	const prompt = `Bạn là một đầu bếp Việt Nam CHUYÊN NGHIỆP, am hiểu sâu ẩm thực Việt Nam.
 
-PHONG CÁCH: ${locationInfo.style}
-CỬA HÀNG: ${locationInfo.stores}
-TIỀN TỆ: ${locationInfo.currency}
+CỬA HÀNG: Bách Hoá Xanh, Winmart, Co.opmart, Lotte Mart, hoặc chợ
+TIỀN TỆ: VND
 SỐ NGƯỜI: ${people}
 ${budgetInfo.prompt}
 SỐ MÓN: Từ ${dishesRange.min} đến ${dishesRange.max} món
@@ -155,8 +138,7 @@ QUY TẮC:
 - Số bước: tối thiểu 5-10 bước cho mỗi món
 - tips: ít nhất 3 mẹo hữu ích cho món ăn
 - Đảm bảo món ăn phù hợp với ${people} người
-- Nếu phong cách là Việt Nam: ưu tiên món Việt
-- Nếu phong cách là châu Âu: ưu tiên món Âu`;
+- Luôn ưu tiên món ăn Việt Nam`;
 
 	const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 
